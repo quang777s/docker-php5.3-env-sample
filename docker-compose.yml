@@ -1,0 +1,38 @@
+version: '2'
+services:
+  apache:
+    image: yappabe/apache-php:5.3
+    ports:
+      - "8000:80"
+    links:
+      - database
+    # volumes_from:
+    #   - app
+    environment:
+      DOCUMENT_ROOT: /var/www/html/web
+      ENVIRONMENT: dev
+    volumes:
+      - /Users/quangpham/docker/php5.3:/var/www/html/
+
+  # database container - actency images
+  database:
+    # actency/docker-mysql available tags: latest, 5.7, 5.6, 5.5
+    image: actency/docker-mysql:5.7
+    ports:
+      - "8989:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=example
+      - MYSQL_USER=example_user
+      - MYSQL_PASSWORD=mysqlpwd
+
+  # phpmyadmin container - actency images
+  phpmyadmin:
+    image: actency/docker-phpmyadmin
+    ports:
+      - "8010:80"
+    environment:
+      - MYSQL_ROOT_PASSWORD=mysqlroot
+      - UPLOAD_SIZE=1G
+    links:
+      - database:mysql
